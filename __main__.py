@@ -27,4 +27,4 @@ get_kubeconfig = command.local.Command(
 # Export the cluster name and kubeconfig
 pulumi.export("clusterName", cluster_name)
 pulumi.export("kubeconfig", get_kubeconfig.stdout)
-pulumi.export("message", "Run 'kubectl config use-context kind-{cluster_name}' to use this cluster")
+pulumi.export("message", f"Run 'kubectl config use-context kind-{cluster_name}' to use this cluster")

@@ -1,9 +1,7 @@
-"""
-Example Pulumi configuration file for dev stack.
-
-This file demonstrates how to configure the kind cluster parameters.
-Copy this to Pulumi.dev.yaml and customize as needed.
-"""
+# Example Pulumi configuration file for dev stack.
+#
+# This file demonstrates how to configure the kind cluster parameters.
+# Copy this to Pulumi.dev.yaml and customize as needed.
 
 config:
   pulumi-k8s-kind:clusterName: my-dev-cluster
