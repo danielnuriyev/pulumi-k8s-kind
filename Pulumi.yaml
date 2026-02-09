@@ -1,0 +1,6 @@
+name: pulumi-k8s-kind
+runtime:
+  name: python
+  options:
+    toolchain: uv
+description: A Pulumi program to create a local kind cluster
