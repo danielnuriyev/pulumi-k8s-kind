@@ -1,0 +1,7 @@
+name: pulumi-k8s-kind
+runtime:
+  name: python
+  options:
+    toolchain: uv
+    virtualenv: .venv
+description: Create a local k8s cluster using kind with Pulumi and uv
