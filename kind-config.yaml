@@ -3,6 +3,24 @@ apiVersion: kind.x-k8s.io/v1alpha4
 name: local
 networking:
   ipFamily: ipv4
+
+# Define resource configurations using YAML anchors
+control-plane-resources: &control-plane-resources
+  requests:
+    cpu: "1"
+    memory: "2Gi"
+  limits:
+    cpu: "2"
+    memory: "4Gi"
+
+worker-resources: &worker-resources
+  requests:
+    cpu: "1"
+    memory: "2Gi"
+  limits:
+    cpu: "2"
+    memory: "4Gi"
+
 nodes:
 - role: control-plane
   kubeadmConfigPatches:
@@ -11,6 +29,8 @@ nodes:
     nodeRegistration:
       kubeletExtraArgs:
         node-labels: "ingress-ready=true"
+  # Control plane node resources
+  resources: *control-plane-resources
   extraPortMappings:
   # Minio (Object Storage)
   - containerPort: 9000
@@ -58,11 +78,18 @@ nodes:
   - containerPort: 8000
     hostPort: 8001
     protocol: TCP
+  # Spark (Distributed Computing)
+  - containerPort: 8085
+    hostPort: 8085
+    protocol: TCP
+  - containerPort: 8086
+    hostPort: 8086
+    protocol: TCP
+  - containerPort: 7077
+    hostPort: 7077
+    protocol: TCP
 # Worker nodes for better resource allocation
 - role: worker
+  resources: *worker-resources
 - role: worker
-- role: worker
-- role: worker
-- role: worker
-- role: worker
-- role: worker
+  resources: *worker-resources
