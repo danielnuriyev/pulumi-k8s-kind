@@ -1,6 +1,6 @@
 # pulumi-k8s-kind
 
-Creates a local Kubernetes cluster using [kind](https://kind.sigs.k8s.io/) managed by [Pulumi](https://www.pulumi.com/) with Python and [uv](https://github.com/astral-sh/uv) to be used for my other local deployments: Trino, Snowflake Emulator, Spark, Dagster.
+Creates a local Kubernetes cluster using [kind](https://kind.sigs.k8s.io/) to be used for my other local deployments: Trino, Snowflake Emulator, Spark, Dagster etc.
 
 ## Prerequisites
 
