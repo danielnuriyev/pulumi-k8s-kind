@@ -3,34 +3,24 @@ apiVersion: kind.x-k8s.io/v1alpha4
 name: local
 networking:
   ipFamily: ipv4
-
-# Define resource configurations using YAML anchors
-control-plane-resources: &control-plane-resources
-  requests:
-    cpu: "1"
-    memory: "2Gi"
-  limits:
-    cpu: "2"
-    memory: "4Gi"
-
-worker-resources: &worker-resources
-  requests:
-    cpu: "1"
-    memory: "2Gi"
-  limits:
-    cpu: "2"
-    memory: "4Gi"
+containerdConfigPatches:
+- |-
+  [plugins."io.containerd.grpc.v1.cri".registry]
+    config_path = "/etc/containerd/certs.d"
 
 nodes:
 - role: control-plane
+  # Hopsworks requires Kubernetes >= 1.27 and < 1.35.
+  image: &node-image kindest/node:v1.34.0@sha256:7416a61b42b1662ca6ca89f02028ac133a309a2a30ba309614e8ec94d976dc5a
   kubeadmConfigPatches:
   - |
     kind: InitConfiguration
     nodeRegistration:
       kubeletExtraArgs:
         node-labels: "ingress-ready=true"
-  # Control plane node resources
-  resources: *control-plane-resources
+  extraMounts: &hopsworks-registry-mount
+  - hostPath: registry-certs/docker.hops.works/hosts.toml
+    containerPath: /etc/containerd/certs.d/docker.hops.works/hosts.toml
   extraPortMappings:
   # Minio (Object Storage)
   - containerPort: 9000
@@ -90,6 +80,8 @@ nodes:
     protocol: TCP
 # Worker nodes for better resource allocation
 - role: worker
-  resources: *worker-resources
+  image: *node-image
+  extraMounts: *hopsworks-registry-mount
 - role: worker
-  resources: *worker-resources
+  image: *node-image
+  extraMounts: *hopsworks-registry-mount
