@@ -1,6 +1,7 @@
-name: pulumi-k8s-kind
+name: pulumi-kind
+description: Local Kind cluster for pulumi-api and monitoring
 runtime:
   name: python
   options:
     toolchain: uv
-description: Create a local Kind cluster or an AWS EKS cluster
+    virtualenv: .venv

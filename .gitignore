@@ -53,6 +53,7 @@ env/
 # Pulumi
 .pulumi/
 Pulumi.*.yaml
+.kubeconfig
 
 # IDEs
 .vscode/

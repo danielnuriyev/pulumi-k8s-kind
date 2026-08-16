@@ -3,85 +3,26 @@ apiVersion: kind.x-k8s.io/v1alpha4
 name: local
 networking:
   ipFamily: ipv4
-containerdConfigPatches:
-- |-
-  [plugins."io.containerd.grpc.v1.cri".registry]
-    config_path = "/etc/containerd/certs.d"
 
 nodes:
 - role: control-plane
-  # Hopsworks requires Kubernetes >= 1.27 and < 1.35.
-  image: &node-image kindest/node:v1.34.0@sha256:7416a61b42b1662ca6ca89f02028ac133a309a2a30ba309614e8ec94d976dc5a
+  image: kindest/node:v1.31.0
   kubeadmConfigPatches:
   - |
     kind: InitConfiguration
     nodeRegistration:
       kubeletExtraArgs:
         node-labels: "ingress-ready=true"
-  extraMounts: &hopsworks-registry-mount
-  - hostPath: registry-certs/docker.hops.works/hosts.toml
-    containerPath: /etc/containerd/certs.d/docker.hops.works/hosts.toml
   extraPortMappings:
-  # Minio (Object Storage)
-  - containerPort: 9000
-    hostPort: 9000
-    protocol: TCP
-  - containerPort: 9001
-    hostPort: 9001
-    protocol: TCP
-  # Nessie (Iceberg Catalog)
-  - containerPort: 19120
-    hostPort: 19120
-    protocol: TCP
-  # Trino (Distributed SQL Query Engine)
-  - containerPort: 8080
-    hostPort: 8080
-    protocol: TCP
-  # Snowflake Emulator
-  - containerPort: 8081
-    hostPort: 8081
-    protocol: TCP
-  # Dagster (Data Orchestration)
-  - containerPort: 3000
-    hostPort: 3000
-    protocol: TCP
-  - containerPort: 4000
-    hostPort: 4000
-    protocol: TCP
-  - containerPort: 4266
-    hostPort: 4266
-    protocol: TCP
-  # Ingress Controller (HTTP/HTTPS)
   - containerPort: 80
     hostPort: 80
     protocol: TCP
   - containerPort: 443
     hostPort: 443
     protocol: TCP
-  # Windmill (Developer Platform)
-  - containerPort: 80
-    hostPort: 8082
-    protocol: TCP
-  - containerPort: 443
-    hostPort: 8443
-    protocol: TCP
-  - containerPort: 8000
-    hostPort: 8001
-    protocol: TCP
-  # Spark (Distributed Computing)
-  - containerPort: 8085
-    hostPort: 8085
-    protocol: TCP
-  - containerPort: 8086
-    hostPort: 8086
-    protocol: TCP
-  - containerPort: 7077
-    hostPort: 7077
-    protocol: TCP
-# Worker nodes for better resource allocation
 - role: worker
-  image: *node-image
-  extraMounts: *hopsworks-registry-mount
+  image: kindest/node:v1.31.0
 - role: worker
-  image: *node-image
-  extraMounts: *hopsworks-registry-mount
+  image: kindest/node:v1.31.0
+- role: worker
+  image: kindest/node:v1.31.0

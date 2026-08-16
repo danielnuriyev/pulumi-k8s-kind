@@ -1,5 +1,0 @@
-server = "https://docker.hops.works"
-
-[host."https://docker.hops.works"]
-  capabilities = ["pull", "resolve"]
-  skip_verify = true
